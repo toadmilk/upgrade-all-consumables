@@ -1,0 +1,5 @@
+{
+  "icon": "icon.png",
+  "load": ["templates.html"],
+  "setup": "setup.mjs"
+}
