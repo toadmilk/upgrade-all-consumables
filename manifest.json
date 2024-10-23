@@ -1,4 +1,5 @@
 {
+  "namespace": "upgradeAllConsumables",
   "icon": "icon.png",
   "load": ["templates.html"],
   "setup": "setup.mjs"
