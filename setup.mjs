@@ -1,4 +1,4 @@
-export function setup({ settings, onInterfaceReady, patch }) {
+export function setup({ settings, onInterfaceReady }) {
 
   const upgradeCategories = {
     Misc: ["Portable Rations", "Blood Vial", "Mysterious Stone"],
@@ -57,16 +57,7 @@ export function setup({ settings, onInterfaceReady, patch }) {
   ]);
 
   onInterfaceReady(() => {
-    // const allPotionUpgrades = Array.from(game.bank.itemUpgrades).filter(([root]) => root.type === 'Potion');
-
     const store = ui.createStore({
-      // lastSelected: null,
-      // setLastSelected(item) {
-      //   this.lastSelected = {
-      //     id: item.id,
-      //     name: item.name.substring(0, item.name.length - (2 + (item.tier === 3 ? 1 : item.tier))),
-      //   };
-      // },
       sellRemainderConsumables: settings.section('General').get('sell-remainder-consumables'),
       setsellRemainderConsumables(value) {
         this.sellRemainderConsumables = value;
@@ -79,21 +70,9 @@ export function setup({ settings, onInterfaceReady, patch }) {
       setupgradeAbyssalContracts(value) {
         this.upgradeAbyssalContracts = value;
       },
-      // upgradeAllPotions() {
-      //   upgradeAllPotions(allPotionUpgrades, this.sellRemainderConsumables);
-      // },
-      // upgradeLast() {
-      //   upgradePotion(this.lastSelected.id, allPotionUpgrades, this.sellRemainderConsumables);
-      // },
       upgradeAllConsumables() {
         upgradeAllConsumables(allConsumableUpgrades, this);
       }
-    });
-
-    patch(Bank, 'toggleItemForSelection').after((_, bankItem) => {
-      if (bankItem.item.type !== 'Potion') return;
-  
-      store.setLastSelected(bankItem.item);
     });
 
     events.on('changeSellRemainderConsumables', (v) => store.setsellRemainderConsumables(v));
@@ -109,72 +88,13 @@ export function setup({ settings, onInterfaceReady, patch }) {
       $template: '#bc-uap-root-2',
       store,
     }, consumableContainer);
-
-    // // Potions
-    // const potionContainer = document.createElement('div');
-    // document.querySelector('lang-string[lang-id="BANK_STRING_4"]').parentElement
-    //   .after(potionContainer);
-
-    ui.create({
-      $template: '#bc-uap-root',
-      store,
-    }, potionContainer);
   });
 }
-
-// function upgradeAllPotions(allPotionUpgrades, sellRemainderConsumables) {
-//   const tiers = [0, 1, 2];
-//   for (const tier of tiers) {
-//     const tierUpgrades = allPotionUpgrades.filter(([root]) => root.tier === tier)
-//       .map(([_, upgrades]) => upgrades.find((upgrade) => upgrade.upgradedItem.type === 'Potion' && upgrade.upgradedItem.tier === tier + 1))
-//       .filter((upgrade) => game.bank.checkUpgradePotionRequirement(upgrade) && game.bank.getMaxUpgradeQuantity(upgrade) > 0);
-//     tierUpgrades.forEach((upgrade) => {
-//       game.bank.upgradeItemOnClick(upgrade, Infinity);
-//       // Ensure potions were upgraded
-//       if (game.bank.getMaxUpgradeQuantity(upgrade) === 0 && sellRemainderConsumables) {
-//         const usedPotion = upgrade.rootItems.find((item) => item.tier === upgrade.upgradedItem.tier - 1);
-//         const qty = game.bank.getQty(usedPotion);
-//         if (qty > 0) game.bank.processItemSale(usedPotion, qty);
-//       }
-//     });
-//   }
-// }
-
-// function upgradeAllConsumables(categorizedConsumableUpgrades, sellRemainderConsumables) {
-//   //addTestItems();
-
-//   categorizedConsumableUpgrades.forEach((consumableUpgrades) => {
-//     const upgrades = consumableUpgrades
-//       .map(([_, upgrades]) => upgrades.find((upgrade) => game.bank.getMaxUpgradeQuantity(upgrade) > 0))
-//       .filter((upgrade) => upgrade !== undefined);
-
-//     upgrades.forEach((upgrade) => {
-//       const availableMaterial = game.bank.getMaxUpgradeQuantity(upgrade);
-      
-//       // Skip if a previous consumable expended required materials
-//       if (availableMaterial <= 0) {
-//         console.log(`Skipping ${upgrade.upgradedItem} due to insufficient materials.`);
-//         return;
-//       }
-
-//       game.bank.upgradeItemOnClick(upgrade, Infinity);
-//       // Sell off remaining consumables
-//       if (game.bank.getMaxUpgradeQuantity(upgrade) === 0 && sellRemainderConsumables) {
-//         const usedConsumable = upgrade.rootItems[0];
-//         const qty = game.bank.getQty(usedConsumable);
-//         const isLocked = game.bank.lockedItems.has(usedConsumable);
-//         if (qty > 0 && isLocked === false) {
-//             game.bank.processItemSale(usedConsumable, qty);
-//         }
-//       }
-//     });
-//   });
-// }
 
 function upgradeAllConsumables(categorizedConsumableUpgrades, settings) {
 
   // TESTING
-  addTestItems();
+  // addTestItems();
 
   categorizedConsumableUpgrades.forEach((consumableUpgrades) => {
     let canUpgrade = true;
@@ -205,7 +125,6 @@ function upgradeAllConsumables(categorizedConsumableUpgrades, settings) {
         ];
 
         const upgradeId = upgrade.upgradedItem.id;
-        console.log(upgradeId);
 
         if (!settings.upgradeAbyssalContracts && abyssalContracts.includes(upgradeId)) {
           return;

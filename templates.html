@@ -1,33 +1,5 @@
-<template id="bc-uap-root">
-  <div id="upgrade-potions-div" class="m-1">
-    <button type="button" class="btn btn-success" @click="store.upgradeAllPotions()">Upgrade All Potions</button>
-    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-      <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <div class="dropdown-menu dropdown-menu-right font-size-sm">
-      <button type="button" class="dropdown-item d-flex flex-column" :disabled="store.lastSelected === null" @click="store.upgradeLast()">
-        <span>Upgrade Last Selected</span>
-        <span :class="`text-${(store.lastSelected === null ? 'danger' : 'success')}`">
-          {{ (store.lastSelected === null ? 'None' : store.lastSelected.name) }}
-        </span>
-      </button>
-    </div>
-  </div>
-</template>
-
 <template id="bc-uap-root-2">
   <div class="m-1">
     <button type="button" class="btn btn-success" @click="store.upgradeAllConsumables()">Upgrade All Consumables</button>
-    <!-- <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-      <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <div class="dropdown-menu dropdown-menu-right font-size-sm">
-      <button type="button" class="dropdown-item d-flex flex-column" :disabled="store.lastSelected === null" @click="store.upgradeLast()">
-        <span>Upgrade Last Selected</span>
-        <span :class="`text-${(store.lastSelected === null ? 'danger' : 'success')}`">
-          {{ (store.lastSelected === null ? 'None' : store.lastSelected.name) }}
-        </span>
-      </button>
-    </div>
-  </div> -->
+  </div>
 </template>
